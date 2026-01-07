@@ -10,6 +10,7 @@ interface ThoughtInputProps {
 
 export default function ThoughtInput({ currentAge, onSave, isSaving }: ThoughtInputProps) {
   const [thought, setThought] = useState('')
+  const [isFocused, setIsFocused] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -33,13 +34,30 @@ export default function ThoughtInput({ currentAge, onSave, isSaving }: ThoughtIn
         </p>
       </div>
       
-      <div className="mb-6">
+      <div className="mb-6 relative">
         <textarea
           value={thought}
           onChange={(e) => setThought(e.target.value)}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
           placeholder=""
           rows={4}
-          className="w-full px-6 py-4 text-lg font-serif bg-transparent border-b border-[#2c2c2c]/20 focus:outline-none focus:border-[#2c2c2c]/40 resize-none transition-colors"
+          className="w-full text-lg font-serif bg-transparent focus:outline-none resize-none relative z-10"
+          style={{ 
+            lineHeight: '1.75',
+            padding: '0 1.5rem',
+            margin: '0',
+            border: 'none',
+          }}
+        />
+        <div 
+          className="absolute border-b transition-colors pointer-events-none"
+          style={{
+            left: '1.5rem',
+            right: '1.5rem',
+            top: '1.5rem', // Positioned right at text baseline where cursor blinks
+            borderColor: isFocused ? 'rgba(44, 44, 44, 0.4)' : 'rgba(44, 44, 44, 0.2)',
+          }}
         />
       </div>
       

@@ -59,10 +59,10 @@ export default function Auth() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="mb-12 text-center">
-          <p className="text-3xl font-serif text-[#2c2c2c] mb-2">
+    <div className="h-screen flex items-center justify-center p-6">
+      <div className="w-full max-w-2xl">
+        <div className="mb-16 text-center">
+          <p className="text-4xl md:text-5xl font-serif text-[#2c2c2c] leading-tight tracking-tight">
             when i was {isSignUp ? 'starting' : 'returning'} years old, i thought…
           </p>
         </div>
@@ -75,7 +75,7 @@ export default function Auth() {
               setMessage('')
             }}
             className={`pb-2 border-b transition-colors ${
-              !isSignUp ? 'border-[#2c2c2c]' : 'border-transparent text-[#2c2c2c]/60'
+              !isSignUp ? 'border-[#f97316]' : 'border-transparent text-[#2c2c2c]/60'
             }`}
           >
             sign in
@@ -87,7 +87,7 @@ export default function Auth() {
               setMessage('')
             }}
             className={`pb-2 border-b transition-colors ${
-              isSignUp ? 'border-[#2c2c2c]' : 'border-transparent text-[#2c2c2c]/60'
+              isSignUp ? 'border-[#f97316]' : 'border-transparent text-[#2c2c2c]/60'
             }`}
           >
             sign up
@@ -102,7 +102,7 @@ export default function Auth() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="email"
               required={!isMagicLink}
-              className="w-full px-4 py-3 text-lg font-serif bg-transparent border-b border-[#2c2c2c]/20 focus:outline-none focus:border-[#2c2c2c]/40 transition-colors"
+              className="w-full px-6 py-4 text-xl font-serif bg-transparent border-b border-[#f97316]/20 focus:outline-none focus:border-[#f97316]/50 transition-colors"
             />
           </div>
 
@@ -114,7 +114,7 @@ export default function Auth() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="password"
                 required
-                className="w-full px-4 py-3 text-lg font-serif bg-transparent border-b border-[#2c2c2c]/20 focus:outline-none focus:border-[#2c2c2c]/40 transition-colors"
+                className="w-full px-6 py-4 text-xl font-serif bg-transparent border-b border-[#f97316]/20 focus:outline-none focus:border-[#f97316]/50 transition-colors"
               />
             </div>
           )}
@@ -123,11 +123,11 @@ export default function Auth() {
             <div className="text-sm text-[#2c2c2c]/60 text-center">{message}</div>
           )}
 
-          <div className="flex flex-col gap-3 pt-4">
+          <div className="flex flex-col gap-4 pt-6">
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full px-6 py-3 text-sm bg-[#2c2c2c] text-white hover:bg-[#2c2c2c]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="w-full px-8 py-4 text-sm tracking-wider bg-[#f97316] text-white hover:bg-[#ea580c] disabled:opacity-30 disabled:cursor-not-allowed transition-colors font-serif uppercase"
             >
               {isLoading ? '...' : isMagicLink ? 'send magic link' : isSignUp ? 'sign up' : 'sign in'}
             </button>
@@ -139,7 +139,7 @@ export default function Auth() {
                   setIsMagicLink(true)
                   setMessage('')
                 }}
-                className="w-full px-6 py-3 text-sm text-[#2c2c2c]/60 hover:text-[#2c2c2c] transition-colors"
+                className="w-full px-8 py-4 text-sm text-[#2c2c2c]/40 hover:text-[#2c2c2c]/60 transition-colors font-serif tracking-wide"
               >
                 use magic link instead
               </button>

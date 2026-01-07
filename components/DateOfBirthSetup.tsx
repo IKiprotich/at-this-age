@@ -39,10 +39,10 @@ export default function DateOfBirthSetup({ onComplete }: DateOfBirthSetupProps) 
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="mb-12 text-center">
-          <p className="text-3xl font-serif text-[#2c2c2c] leading-relaxed">
+    <div className="h-screen flex items-center justify-center p-6">
+      <div className="w-full max-w-2xl">
+        <div className="mb-16 text-center">
+          <p className="text-4xl md:text-5xl font-serif text-[#2c2c2c] leading-tight tracking-tight">
             to begin, tell us when you were born
           </p>
         </div>
@@ -55,15 +55,15 @@ export default function DateOfBirthSetup({ onComplete }: DateOfBirthSetupProps) 
               onChange={(e) => setDateOfBirth(e.target.value)}
               required
               max={new Date().toISOString().split('T')[0]}
-              className="w-full px-4 py-3 text-lg font-serif bg-transparent border-b border-[#2c2c2c]/20 focus:outline-none focus:border-[#2c2c2c]/40 transition-colors"
+              className="w-full px-6 py-4 text-xl font-serif bg-transparent border-b border-[#f97316]/20 focus:outline-none focus:border-[#f97316]/50 transition-colors"
             />
           </div>
 
-          <div className="text-center">
+          <div className="text-center pt-6">
             <button
               type="submit"
               disabled={!dateOfBirth || isSaving}
-              className="px-8 py-3 text-sm tracking-wide text-[#2c2c2c] hover:text-[#2c2c2c]/80 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="px-12 py-4 text-sm tracking-wider bg-[#f97316] text-white hover:bg-[#ea580c] disabled:opacity-30 disabled:cursor-not-allowed transition-colors font-serif uppercase"
             >
               {isSaving ? 'saving...' : 'continue'}
             </button>

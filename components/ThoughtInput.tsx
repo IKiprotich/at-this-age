@@ -27,25 +27,25 @@ export default function ThoughtInput({ currentAge, onSave, isSaving }: ThoughtIn
   const formattedAge = currentAge.toFixed(currentAge % 1 === 0 ? 0 : currentAge % 0.1 === 0 ? 1 : 2)
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto">
-      <div className="mb-12 text-center">
-        <p className="text-4xl md:text-5xl font-serif text-[#2c2c2c] leading-relaxed">
+    <form onSubmit={handleSubmit} className="w-full">
+      <div className="mb-16 text-center">
+        <p className="text-5xl md:text-6xl lg:text-7xl font-serif text-[#2c2c2c] leading-tight tracking-tight">
           when i was {formattedAge} years old, i thought…
         </p>
       </div>
       
-      <div className="mb-6 relative">
+      <div className="mb-8 relative max-w-4xl mx-auto">
         <textarea
           value={thought}
           onChange={(e) => setThought(e.target.value)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           placeholder=""
-          rows={4}
-          className="w-full text-lg font-serif bg-transparent focus:outline-none resize-none relative z-10"
+          rows={3}
+          className="w-full text-xl md:text-2xl font-serif bg-transparent focus:outline-none resize-none relative z-10"
           style={{ 
-            lineHeight: '1.75',
-            padding: '0 1.5rem',
+            lineHeight: '1.6',
+            padding: '0 2rem',
             margin: '0',
             border: 'none',
           }}
@@ -53,10 +53,11 @@ export default function ThoughtInput({ currentAge, onSave, isSaving }: ThoughtIn
         <div 
           className="absolute border-b transition-colors pointer-events-none"
           style={{
-            left: '1.5rem',
-            right: '1.5rem',
-            top: '1.5rem', // Positioned right at text baseline where cursor blinks
-            borderColor: isFocused ? 'rgba(44, 44, 44, 0.4)' : 'rgba(44, 44, 44, 0.2)',
+            left: '2rem',
+            right: '2rem',
+            top: '1.9rem', // Adjusted for larger text-xl/2xl font size
+            borderColor: isFocused ? 'rgba(249, 115, 22, 0.6)' : 'rgba(249, 115, 22, 0.3)',
+            borderWidth: '1px',
           }}
         />
       </div>
@@ -65,9 +66,9 @@ export default function ThoughtInput({ currentAge, onSave, isSaving }: ThoughtIn
         <button
           type="submit"
           disabled={!thought.trim() || isSaving}
-          className="px-8 py-3 text-sm tracking-wide text-[#2c2c2c]/60 hover:text-[#2c2c2c] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          className="px-12 py-4 text-sm tracking-wider bg-[#f97316] text-white hover:bg-[#ea580c] disabled:opacity-30 disabled:cursor-not-allowed transition-colors font-serif uppercase"
         >
-          save thought
+          {isSaving ? 'saving...' : 'save thought'}
         </button>
       </div>
     </form>

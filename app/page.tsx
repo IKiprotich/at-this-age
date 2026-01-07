@@ -132,8 +132,8 @@ export default function Home() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-lg font-serif text-[#2c2c2c]/40">...</div>
+      <div className="h-screen flex items-center justify-center">
+        <div className="text-xl font-serif text-[#f97316]/40">...</div>
       </div>
     )
   }
@@ -147,27 +147,39 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen py-16 px-4">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-right mb-8">
-          <button
-            onClick={handleSignOut}
-            className="text-xs text-[#2c2c2c]/40 hover:text-[#2c2c2c]/60 transition-colors"
-          >
-            sign out
-          </button>
+    <div className="h-screen flex flex-col overflow-hidden">
+      <div className="flex-1 overflow-y-auto">
+        <div className="min-h-full flex flex-col">
+          <div className="flex-shrink-0 px-6 pt-6 pb-4">
+            <div className="max-w-6xl mx-auto flex justify-end">
+              <button
+                onClick={handleSignOut}
+                className="text-xs text-[#f97316]/60 hover:text-[#f97316] transition-colors font-serif"
+              >
+                sign out
+              </button>
+            </div>
+          </div>
+
+          <div className="flex-1 flex flex-col justify-center px-6 pb-12">
+            <div className="max-w-6xl mx-auto w-full">
+              <ThoughtInput
+                currentAge={currentAge}
+                onSave={handleSaveThought}
+                isSaving={isSaving}
+              />
+            </div>
+          </div>
+
+          <div className="flex-shrink-0 px-6 pb-12">
+            <div className="max-w-6xl mx-auto w-full">
+              <Timeline
+                thoughts={thoughts}
+                onPreserve={setSelectedThought}
+              />
+            </div>
+          </div>
         </div>
-
-        <ThoughtInput
-          currentAge={currentAge}
-          onSave={handleSaveThought}
-          isSaving={isSaving}
-        />
-
-        <Timeline
-          thoughts={thoughts}
-          onPreserve={setSelectedThought}
-        />
       </div>
 
       {selectedThought && (

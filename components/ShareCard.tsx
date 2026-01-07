@@ -27,12 +27,48 @@ export default function ShareCard({ thought, onClose }: ShareCardProps) {
 
     setIsExporting(true)
     try {
-      const dataUrl = await toPng(exportRef.current, {
+      // Ensure fonts are loaded
+      await document.fonts.ready
+      
+      const element = exportRef.current
+      
+      // Store original styles
+      const originalStyles = {
+        position: element.style.position,
+        left: element.style.left,
+        top: element.style.top,
+        visibility: element.style.visibility,
+        opacity: element.style.opacity,
+        zIndex: element.style.zIndex,
+      }
+      
+      // Temporarily position element in viewport for rendering
+      element.style.position = 'fixed'
+      element.style.left = '0'
+      element.style.top = '0'
+      element.style.visibility = 'visible'
+      element.style.opacity = '1'
+      element.style.zIndex = '9999'
+      
+      // Wait for rendering
+      await new Promise(resolve => setTimeout(resolve, 300))
+
+      const dataUrl = await toPng(element, {
         width: 1080,
         height: 1080,
         pixelRatio: 2,
         quality: 1,
+        backgroundColor: '#f7f5f2',
+        cacheBust: true,
       })
+
+      // Restore original styles
+      element.style.position = originalStyles.position
+      element.style.left = originalStyles.left
+      element.style.top = originalStyles.top
+      element.style.visibility = originalStyles.visibility
+      element.style.opacity = originalStyles.opacity
+      element.style.zIndex = originalStyles.zIndex
 
       if (navigator.share) {
         try {
@@ -55,6 +91,7 @@ export default function ShareCard({ thought, onClose }: ShareCardProps) {
       }
     } catch (error) {
       console.error('Failed to export image:', error)
+      alert('Failed to export image. Please try again.')
     } finally {
       setIsExporting(false)
     }
@@ -64,27 +101,36 @@ export default function ShareCard({ thought, onClose }: ShareCardProps) {
     <>
       <div
         ref={exportRef}
-        className="fixed -left-[9999px] top-0"
         style={{
+          position: 'fixed',
+          left: '-9999px',
+          top: '0',
           width: '1080px',
           height: '1080px',
           backgroundColor: '#f7f5f2',
-          fontFamily: 'Playfair Display, Georgia, serif',
+          fontFamily: '"Playfair Display", Georgia, serif',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
           padding: variant === 'offset' ? '120px 108px' : '120px',
           textAlign: 'center',
+          borderRadius: '48px',
+          overflow: 'hidden',
+          boxSizing: 'border-box',
+          visibility: 'hidden',
+          opacity: '0',
         }}
       >
         {includeAge && (
           <div
             style={{
               fontSize: '48px',
-              color: 'rgba(44, 44, 44, 0.7)',
+              color: 'rgba(249, 115, 22, 0.8)',
               lineHeight: '1.6',
               marginBottom: '48px',
+              fontWeight: 500,
+              fontFamily: '"Playfair Display", Georgia, serif',
             }}
           >
             when i was {formatAge(thought.age)} years old,
@@ -98,6 +144,8 @@ export default function ShareCard({ thought, onClose }: ShareCardProps) {
             color: '#2c2c2c',
             lineHeight: '1.6',
             marginBottom: '64px',
+            fontWeight: 400,
+            fontFamily: '"Playfair Display", Georgia, serif',
           }}
         >
           "{thought.thought}"
@@ -105,22 +153,25 @@ export default function ShareCard({ thought, onClose }: ShareCardProps) {
         <div
           style={{
             fontSize: '14px',
-            color: 'rgba(44, 44, 44, 0.4)',
+            color: 'rgba(249, 115, 22, 0.5)',
             marginTop: 'auto',
+            letterSpacing: '0.05em',
+            textTransform: 'uppercase',
+            fontFamily: '"Playfair Display", Georgia, serif',
           }}
         >
           written at a moment in time
         </div>
       </div>
 
-      <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50 p-4" onClick={onClose}>
-        <div className="bg-white rounded-lg max-w-2xl w-full p-8" onClick={(e) => e.stopPropagation()}>
-          <div className="mb-6">
-            <h2 className="text-xl font-serif mb-4">preserve this moment</h2>
+      <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
+        <div className="bg-white rounded-3xl max-w-2xl w-full p-8 md:p-10 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+          <div className="mb-8">
+            <h2 className="text-2xl font-serif mb-6 text-[#2c2c2c]">preserve this moment</h2>
             
-            <div className="mb-6 bg-[#f7f5f2] p-8 rounded" style={{ aspectRatio: '1/1' }}>
+            <div className="mb-8 bg-[#f7f5f2] p-6 md:p-8 rounded-3xl overflow-hidden" style={{ aspectRatio: '1/1' }}>
               <div
-                className="w-full h-full flex flex-col justify-center items-center p-12 text-center"
+                className="w-full h-full flex flex-col justify-center items-center p-8 md:p-12 text-center rounded-2xl"
                 style={{
                   fontFamily: 'Playfair Display, Georgia, serif',
                   backgroundColor: '#f7f5f2',
@@ -128,46 +179,46 @@ export default function ShareCard({ thought, onClose }: ShareCardProps) {
                 }}
               >
                 {includeAge && (
-                  <div className="text-2xl md:text-3xl mb-6 text-[#2c2c2c]/70 leading-relaxed">
+                  <div className="text-2xl md:text-3xl mb-6 text-[#f97316]/80 leading-relaxed font-medium">
                     when i was {formatAge(thought.age)} years old,
                     <br />
                     i thought…
                   </div>
                 )}
-                <div className="text-3xl md:text-4xl text-[#2c2c2c] leading-relaxed mb-8">
+                <div className="text-3xl md:text-4xl lg:text-5xl text-[#2c2c2c] leading-relaxed mb-8 font-normal">
                   "{thought.thought}"
                 </div>
-                <div className="text-xs text-[#2c2c2c]/40 mt-auto">
+                <div className="text-xs text-[#f97316]/50 mt-auto tracking-wider uppercase">
                   written at a moment in time
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center justify-between gap-4">
-            <label className="flex items-center gap-2 text-sm cursor-pointer">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-4 border-t border-[#f97316]/10">
+            <label className="flex items-center gap-3 text-sm cursor-pointer group">
               <input
                 type="checkbox"
                 checked={includeAge}
                 onChange={(e) => setIncludeAge(e.target.checked)}
-                className="w-4 h-4"
+                className="w-5 h-5 rounded border-2 border-[#f97316]/30 checked:bg-[#f97316] checked:border-[#f97316] focus:ring-2 focus:ring-[#f97316]/20 transition-colors cursor-pointer"
               />
-              <span>include age</span>
+              <span className="text-[#2c2c2c]/70 group-hover:text-[#2c2c2c] transition-colors font-serif">include age</span>
             </label>
 
-            <div className="flex gap-3">
+            <div className="flex gap-3 w-full sm:w-auto">
               <button
                 onClick={onClose}
-                className="px-4 py-2 text-sm text-[#2c2c2c]/60 hover:text-[#2c2c2c] transition-colors"
+                className="px-6 py-3 text-sm text-[#2c2c2c]/50 hover:text-[#2c2c2c]/70 transition-colors font-serif tracking-wide flex-1 sm:flex-initial"
               >
                 close
               </button>
               <button
                 onClick={handleExport}
                 disabled={isExporting}
-                className="px-6 py-2 text-sm bg-[#2c2c2c] text-white hover:bg-[#2c2c2c]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-8 py-3 text-sm bg-[#f97316] text-white hover:bg-[#ea580c] disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-serif uppercase tracking-wider rounded-lg shadow-lg hover:shadow-xl flex-1 sm:flex-initial"
               >
-                {isExporting ? 'exporting...' : 'export image'}
+                {isExporting ? 'downloading...' : 'download'}
               </button>
             </div>
           </div>

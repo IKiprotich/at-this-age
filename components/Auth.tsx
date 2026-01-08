@@ -62,9 +62,25 @@ export default function Auth() {
     <div className="h-screen flex items-center justify-center p-6">
       <div className="w-full max-w-2xl">
         <div className="mb-16 text-center">
-          <p className="text-4xl md:text-5xl font-serif text-[#2c2c2c] leading-tight tracking-tight">
-            when i was {isSignUp ? 'starting' : 'returning'} years old, i thought…
-          </p>
+          {isSignUp ? (
+            <div>
+              <p className="text-4xl md:text-5xl font-serif text-[#2c2c2c] leading-tight tracking-tight mb-4">
+                capture your thoughts
+              </p>
+              <p className="text-lg md:text-xl font-serif text-[#2c2c2c]/60 leading-relaxed">
+                at every moment in your life
+              </p>
+            </div>
+          ) : (
+            <div>
+              <p className="text-4xl md:text-5xl font-serif text-[#2c2c2c] leading-tight tracking-tight mb-4">
+                welcome back
+              </p>
+              <p className="text-lg md:text-xl font-serif text-[#2c2c2c]/60 leading-relaxed">
+                continue your journey
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="mb-6 flex gap-4 justify-center text-sm">

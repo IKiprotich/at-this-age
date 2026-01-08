@@ -42,8 +42,11 @@ export default function DateOfBirthSetup({ onComplete }: DateOfBirthSetupProps) 
     <div className="h-screen flex items-center justify-center p-6">
       <div className="w-full max-w-2xl">
         <div className="mb-16 text-center">
-          <p className="text-4xl md:text-5xl font-serif text-[#2c2c2c] leading-tight tracking-tight">
-            to begin, tell us when you were born
+          <p className="text-4xl md:text-5xl font-serif text-[#2c2c2c] leading-tight tracking-tight mb-4">
+            to begin
+          </p>
+          <p className="text-lg md:text-xl font-serif text-[#2c2c2c]/60 leading-relaxed">
+            tell us when you were born
           </p>
         </div>
 

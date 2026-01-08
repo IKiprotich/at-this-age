@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { calculateAge } from '@/lib/utils/age'
 import ThoughtInput from '@/components/ThoughtInput'
@@ -27,40 +27,7 @@ export default function Home() {
 
   const supabase = createClient()
 
-  useEffect(() => {
-    // Check initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null)
-      if (session?.user) {
-        setIsLoading(true)
-        loadProfile()
-        loadThoughts()
-      } else {
-        setIsLoading(false)
-      }
-    })
-
-    // Listen for auth state changes (sign in, sign out, etc.)
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
-      if (session?.user) {
-        setIsLoading(true)
-        loadProfile()
-        loadThoughts()
-      } else {
-        setDateOfBirth(null)
-        setCurrentAge(null)
-        setThoughts([])
-        setIsLoading(false)
-      }
-    })
-
-    return () => {
-      subscription.unsubscribe()
-    }
-  }, [])
-
-  const loadProfile = async () => {
+  const loadProfile = useCallback(async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) {
@@ -95,9 +62,9 @@ export default function Home() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [supabase])
 
-  const loadThoughts = async () => {
+  const loadThoughts = useCallback(async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
@@ -113,7 +80,40 @@ export default function Home() {
     } catch (error) {
       console.error('Failed to load thoughts:', error)
     }
-  }
+  }, [supabase])
+
+  useEffect(() => {
+    // Check initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null)
+      if (session?.user) {
+        setIsLoading(true)
+        loadProfile()
+        loadThoughts()
+      } else {
+        setIsLoading(false)
+      }
+    })
+
+    // Listen for auth state changes (sign in, sign out, etc.)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+      if (session?.user) {
+        setIsLoading(true)
+        loadProfile()
+        loadThoughts()
+      } else {
+        setDateOfBirth(null)
+        setCurrentAge(null)
+        setThoughts([])
+        setIsLoading(false)
+      }
+    })
+
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [supabase, loadProfile, loadThoughts])
 
   const handleSaveThought = async (thoughtText: string) => {
     if (!user || !dateOfBirth || isSaving) return

@@ -148,7 +148,7 @@ export default function ShareCard({ thought, onClose }: ShareCardProps) {
             fontFamily: '"Playfair Display", Georgia, serif',
           }}
         >
-          "{thought.thought}"
+          &ldquo;{thought.thought}&rdquo;
         </div>
         <div
           style={{
@@ -186,7 +186,7 @@ export default function ShareCard({ thought, onClose }: ShareCardProps) {
                   </div>
                 )}
                 <div className="text-3xl md:text-4xl lg:text-5xl text-[#2c2c2c] leading-relaxed mb-8 font-normal">
-                  "{thought.thought}"
+                  &ldquo;{thought.thought}&rdquo;
                 </div>
                 <div className="text-xs text-[#f97316]/50 mt-auto tracking-wider uppercase">
                   written at a moment in time

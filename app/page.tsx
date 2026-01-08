@@ -39,7 +39,7 @@ export default function Home() {
         .from('profiles')
         .select('date_of_birth')
         .eq('id', user.id)
-        .single()
+        .single<{ date_of_birth: string | null }>()
 
       if (error && error.code !== 'PGRST116') {
         console.error('Failed to load profile:', error)

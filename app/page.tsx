@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import type { Database } from '@/lib/supabase/types'
 import { calculateAge } from '@/lib/utils/age'
 import ThoughtInput from '@/components/ThoughtInput'
 import Timeline from '@/components/Timeline'
@@ -128,7 +129,7 @@ export default function Home() {
           user_id: user.id,
           age,
           thought: thoughtText,
-        })
+        } as Database['public']['Tables']['thoughts']['Insert'])
         .select()
         .single()
 

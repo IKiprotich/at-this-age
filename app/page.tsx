@@ -123,13 +123,14 @@ export default function Home() {
     try {
       const age = calculateAge(dateOfBirth)
 
-      const { data, error } = await supabase
-        .from('thoughts')
-        .insert({
-          user_id: user.id,
-          age,
-          thought: thoughtText,
-        } as Database['public']['Tables']['thoughts']['Insert'])
+      const insertData: Database['public']['Tables']['thoughts']['Insert'] = {
+        user_id: user.id,
+        age,
+        thought: thoughtText,
+      }
+      
+      const { data, error } = await (supabase.from('thoughts') as any)
+        .insert(insertData)
         .select()
         .single()
 

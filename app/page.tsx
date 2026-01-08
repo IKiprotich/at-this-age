@@ -28,9 +28,11 @@ export default function Home() {
   const supabase = createClient()
 
   useEffect(() => {
+    // Check initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null)
       if (session?.user) {
+        setIsLoading(true)
         loadProfile()
         loadThoughts()
       } else {
@@ -38,9 +40,11 @@ export default function Home() {
       }
     })
 
-    supabase.auth.onAuthStateChange((_event, session) => {
+    // Listen for auth state changes (sign in, sign out, etc.)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
       if (session?.user) {
+        setIsLoading(true)
         loadProfile()
         loadThoughts()
       } else {
@@ -50,12 +54,19 @@ export default function Home() {
         setIsLoading(false)
       }
     })
+
+    return () => {
+      subscription.unsubscribe()
+    }
   }, [])
 
   const loadProfile = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
+      if (!user) {
+        setIsLoading(false)
+        return
+      }
 
       const { data, error } = await supabase
         .from('profiles')
@@ -63,14 +74,24 @@ export default function Home() {
         .eq('id', user.id)
         .single()
 
-      if (error && error.code !== 'PGRST116') throw error
+      if (error && error.code !== 'PGRST116') {
+        console.error('Failed to load profile:', error)
+        setIsLoading(false)
+        return
+      }
 
       if (data?.date_of_birth) {
         setDateOfBirth(data.date_of_birth)
         setCurrentAge(calculateAge(data.date_of_birth))
+      } else {
+        // Explicitly set to null if no date of birth exists
+        setDateOfBirth(null)
+        setCurrentAge(null)
       }
     } catch (error) {
       console.error('Failed to load profile:', error)
+      setDateOfBirth(null)
+      setCurrentAge(null)
     } finally {
       setIsLoading(false)
     }
@@ -122,8 +143,9 @@ export default function Home() {
     }
   }
 
-  const handleDateOfBirthComplete = () => {
-    loadProfile()
+  const handleDateOfBirthComplete = async () => {
+    setIsLoading(true)
+    await loadProfile()
   }
 
   const handleSignOut = async () => {

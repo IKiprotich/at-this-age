@@ -3,56 +3,54 @@ import type { Database } from './types'
 
 let supabaseClient: ReturnType<typeof createSupabaseClient<Database>> | null = null
 
+// Check if storage is available
+const isStorageAvailable = (): boolean => {
+  if (typeof window === 'undefined') return false
+  try {
+    const test = '__supabase_storage_test__'
+    if (typeof Storage !== 'undefined' && window.localStorage) {
+      localStorage.setItem(test, test)
+      localStorage.removeItem(test)
+      return true
+    }
+  } catch {
+    return false
+  }
+  return false
+}
+
 // Safe storage adapter that handles browser context and storage restrictions
 // This matches localStorage's synchronous interface but gracefully handles errors
 const createSafeStorage = () => {
-  // Check if we're in a browser environment
-  if (typeof window === 'undefined') {
-    // Return a no-op storage for SSR
-    return {
-      getItem: () => null,
-      setItem: () => {},
-      removeItem: () => {},
-    }
-  }
-
-  // Try to use localStorage, but handle cases where it's blocked
-  try {
-    const test = '__supabase_storage_test__'
-    localStorage.setItem(test, test)
-    localStorage.removeItem(test)
-    
-    // Return a safe wrapper around localStorage
-    return {
-      getItem: (key: string) => {
-        try {
-          return localStorage.getItem(key)
-        } catch {
-          return null
-        }
-      },
-      setItem: (key: string, value: string) => {
-        try {
-          localStorage.setItem(key, value)
-        } catch {
-          // Silently fail if storage is blocked
-        }
-      },
-      removeItem: (key: string) => {
-        try {
-          localStorage.removeItem(key)
-        } catch {
-          // Silently fail if storage is blocked
-        }
-      },
-    }
-  } catch {
-    // If localStorage is completely blocked, return a no-op storage
-    return {
-      getItem: () => null,
-      setItem: () => {},
-      removeItem: () => {},
-    }
+  const storageAvailable = isStorageAvailable()
+  
+  // Return a safe wrapper around localStorage or no-op if unavailable
+  return {
+    getItem: (key: string) => {
+      if (!storageAvailable) return null
+      try {
+        return localStorage.getItem(key)
+      } catch (error) {
+        // Suppress storage access errors
+        return null
+      }
+    },
+    setItem: (key: string, value: string) => {
+      if (!storageAvailable) return
+      try {
+        localStorage.setItem(key, value)
+      } catch (error) {
+        // Suppress storage access errors - silently fail
+      }
+    },
+    removeItem: (key: string) => {
+      if (!storageAvailable) return
+      try {
+        localStorage.removeItem(key)
+      } catch (error) {
+        // Suppress storage access errors - silently fail
+      }
+    },
   }
 }
 
@@ -72,9 +70,11 @@ export const createClient = () => {
     auth: {
       storage: createSafeStorage(),
       autoRefreshToken: true,
-      persistSession: true,
+      persistSession: isStorageAvailable(),
       detectSessionInUrl: true,
+      storageKey: 'sb-auth-token',
     },
   })
+  
   return supabaseClient
 }

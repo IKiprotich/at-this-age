@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import type { Database } from '@/lib/supabase/types'
 
 interface DateOfBirthSetupProps {
   onComplete: () => void
@@ -22,12 +23,13 @@ export default function DateOfBirthSetup({ onComplete }: DateOfBirthSetupProps) 
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) throw new Error('Not authenticated')
 
-      const { error } = await supabase
-        .from('profiles')
-        .upsert({
-          id: user.id,
-          date_of_birth: dateOfBirth,
-        })
+      const upsertData: Database['public']['Tables']['profiles']['Insert'] = {
+        id: user.id,
+        date_of_birth: dateOfBirth,
+      }
+
+      const { error } = await (supabase.from('profiles') as any)
+        .upsert(upsertData)
 
       if (error) throw error
       onComplete()

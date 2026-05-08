@@ -15,7 +15,9 @@ CREATE TABLE IF NOT EXISTS thoughts (
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   age NUMERIC(5, 2) NOT NULL,
   thought TEXT NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT NOW()
+  archived_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- Create index on thoughts for efficient queries
@@ -48,6 +50,11 @@ CREATE POLICY "Users can insert own thoughts"
   ON thoughts FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
+CREATE POLICY "Users can update own thoughts"
+  ON thoughts FOR UPDATE
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
 -- Function to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
@@ -60,5 +67,11 @@ $$ LANGUAGE plpgsql;
 -- Trigger to update updated_at on profiles
 CREATE TRIGGER update_profiles_updated_at
   BEFORE UPDATE ON profiles
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- Trigger to update updated_at on thoughts
+CREATE TRIGGER update_thoughts_updated_at
+  BEFORE UPDATE ON thoughts
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();

@@ -10,7 +10,12 @@ interface ThoughtInputProps {
 
 export default function ThoughtInput({ currentAge, onSave, isSaving }: ThoughtInputProps) {
   const [thought, setThought] = useState('')
-  const [isFocused, setIsFocused] = useState(false)
+  const promptSuggestions = [
+    'today i am learning to',
+    'right now i am afraid of',
+    'lately i keep thinking about',
+    'the version of me i am becoming is',
+  ]
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -34,15 +39,13 @@ export default function ThoughtInput({ currentAge, onSave, isSaving }: ThoughtIn
         </p>
       </div>
       
-      <div className="mb-8 relative max-w-4xl mx-auto">
+      <div className="mb-8 relative max-w-4xl mx-auto soft-panel p-4 md:p-6">
         <textarea
           value={thought}
           onChange={(e) => setThought(e.target.value)}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
           placeholder=""
           rows={3}
-          className="w-full text-xl md:text-2xl font-serif bg-transparent focus:outline-none resize-none relative z-10"
+          className="w-full text-xl md:text-2xl font-serif bg-transparent focus:outline-none resize-none relative z-10 rounded-xl"
           style={{ 
             lineHeight: '1.6',
             padding: '0 2rem',
@@ -50,23 +53,31 @@ export default function ThoughtInput({ currentAge, onSave, isSaving }: ThoughtIn
             border: 'none',
           }}
         />
-        <div 
-          className="absolute border-b transition-colors pointer-events-none"
-          style={{
-            left: '2rem',
-            right: '2rem',
-            top: '1.9rem', // Adjusted for larger text-xl/2xl font size
-            borderColor: isFocused ? 'rgba(249, 115, 22, 0.6)' : 'rgba(249, 115, 22, 0.3)',
-            borderWidth: '1px',
-          }}
-        />
+      </div>
+
+      <div className="mb-10 max-w-4xl mx-auto">
+        <div className="text-xs text-[#2c2c2c]/50 mb-3 font-serif tracking-wide uppercase">
+          need a prompt?
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {promptSuggestions.map((prompt) => (
+            <button
+              key={prompt}
+              type="button"
+              onClick={() => setThought(prompt)}
+              className="px-3 py-2 text-xs text-[#2c2c2c]/60 hover:text-[#2c2c2c] border border-[#f97316]/20 hover:border-[#f97316]/35 hover:bg-[#f97316]/5 rounded-full transition-colors font-serif tracking-wide uppercase"
+            >
+              {prompt}
+            </button>
+          ))}
+        </div>
       </div>
       
       <div className="text-center">
         <button
           type="submit"
           disabled={!thought.trim() || isSaving}
-          className="px-12 py-4 text-sm tracking-wider bg-[#f97316] text-white hover:bg-[#ea580c] disabled:opacity-30 disabled:cursor-not-allowed transition-colors font-serif uppercase"
+          className="soft-button"
         >
           {isSaving ? 'saving...' : 'save thought'}
         </button>

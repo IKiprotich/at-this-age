@@ -42,7 +42,7 @@ export default function DateOfBirthSetup({ onComplete }: DateOfBirthSetupProps) 
 
   return (
     <div className="h-screen flex items-center justify-center p-6">
-      <div className="w-full max-w-2xl">
+      <div className="w-full max-w-2xl soft-panel p-8 md:p-10">
         <div className="mb-16 text-center">
           <p className="text-4xl md:text-5xl font-serif text-[#2c2c2c] leading-tight tracking-tight mb-4">
             to begin
@@ -60,7 +60,7 @@ export default function DateOfBirthSetup({ onComplete }: DateOfBirthSetupProps) 
               onChange={(e) => setDateOfBirth(e.target.value)}
               required
               max={new Date().toISOString().split('T')[0]}
-              className="w-full px-6 py-4 text-xl font-serif bg-transparent border-b border-[#f97316]/20 focus:outline-none focus:border-[#f97316]/50 transition-colors"
+              className="soft-input text-xl"
             />
           </div>
 
@@ -68,7 +68,7 @@ export default function DateOfBirthSetup({ onComplete }: DateOfBirthSetupProps) 
             <button
               type="submit"
               disabled={!dateOfBirth || isSaving}
-              className="px-12 py-4 text-sm tracking-wider bg-[#f97316] text-white hover:bg-[#ea580c] disabled:opacity-30 disabled:cursor-not-allowed transition-colors font-serif uppercase"
+              className="soft-button"
             >
               {isSaving ? 'saving...' : 'continue'}
             </button>

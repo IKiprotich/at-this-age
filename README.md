@@ -51,3 +51,29 @@ The design is intentionally sparse and calm, using a warm orange palette and ser
     ├── supabase/           # Supabase client and types
     └── utils/              # Age calculation utilities
 ```
+
+## Quick Start
+
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Create a `.env.local` file in the project root:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-public-key
+   ```
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+4. Open `http://localhost:3000`.
+
+## Supabase Setup Notes
+
+- This app requires a Supabase project with Auth enabled (email/password and optional magic link).
+- Run `supabase/schema.sql` in the Supabase SQL Editor to create:
+  - `profiles` table
+  - `thoughts` table
+  - row-level security policies and indexes
+- If you see `Missing Supabase environment variables`, check `.env.local` values and restart the dev server.

@@ -14,6 +14,7 @@ interface Thought {
   id: string
   age: number
   thought: string
+  archived_at: string | null
   created_at: string
 }
 
@@ -74,6 +75,7 @@ export default function Home() {
         .from('thoughts')
         .select('*')
         .eq('user_id', user.id)
+        .is('archived_at', null)
         .order('age', { ascending: true })
 
       if (error) throw error
@@ -150,6 +152,46 @@ export default function Home() {
     await loadProfile()
   }
 
+  const handleEditThought = async (thoughtId: string, nextThoughtText: string) => {
+    if (!user) return
+
+    try {
+      // Keep update scoped to the signed-in user to avoid cross-user updates.
+      const { data, error } = await (supabase.from('thoughts') as any)
+        .update({ thought: nextThoughtText })
+        .eq('id', thoughtId)
+        .eq('user_id', user.id)
+        .select()
+        .single()
+
+      if (error) throw error
+      if (data) {
+        setThoughts((prevThoughts) =>
+          prevThoughts.map((thought) => (thought.id === thoughtId ? data : thought))
+        )
+      }
+    } catch (error) {
+      console.error('Failed to edit thought:', error)
+    }
+  }
+
+  const handleArchiveThought = async (thoughtId: string) => {
+    if (!user) return
+
+    try {
+      // Soft archive keeps history in DB while removing it from active timeline.
+      const { error } = await (supabase.from('thoughts') as any)
+        .update({ archived_at: new Date().toISOString() })
+        .eq('id', thoughtId)
+        .eq('user_id', user.id)
+
+      if (error) throw error
+      setThoughts((prevThoughts) => prevThoughts.filter((thought) => thought.id !== thoughtId))
+    } catch (error) {
+      console.error('Failed to archive thought:', error)
+    }
+  }
+
   const handleSignOut = async () => {
     await supabase.auth.signOut()
   }
@@ -178,7 +220,7 @@ export default function Home() {
             <div className="max-w-6xl mx-auto flex justify-end">
               <button
                 onClick={handleSignOut}
-                className="text-xs text-[#f97316]/60 hover:text-[#f97316] transition-colors font-serif"
+                className="text-xs text-[#f97316]/65 hover:text-[#f97316] transition-colors font-serif px-3 py-1.5 rounded-full hover:bg-[#f97316]/10"
               >
                 sign out
               </button>
@@ -199,7 +241,10 @@ export default function Home() {
             <div className="max-w-6xl mx-auto w-full">
               <Timeline
                 thoughts={thoughts}
+                currentAge={currentAge}
                 onPreserve={setSelectedThought}
+                onEdit={handleEditThought}
+                onArchive={handleArchiveThought}
               />
             </div>
           </div>

@@ -60,7 +60,7 @@ export default function Auth() {
 
   return (
     <div className="h-screen flex items-center justify-center p-6">
-      <div className="w-full max-w-2xl">
+      <div className="w-full max-w-2xl soft-panel p-8 md:p-10">
         <div className="mb-16 text-center">
           {isSignUp ? (
             <div>
@@ -83,15 +83,15 @@ export default function Auth() {
           )}
         </div>
 
-        <div className="mb-6 flex gap-4 justify-center text-sm">
+        <div className="mb-8 flex gap-3 justify-center text-sm rounded-2xl bg-[#f97316]/5 p-1">
           <button
             onClick={() => {
               setIsSignUp(false)
               setIsMagicLink(false)
               setMessage('')
             }}
-            className={`pb-2 border-b transition-colors ${
-              !isSignUp ? 'border-[#f97316]' : 'border-transparent text-[#2c2c2c]/60'
+            className={`px-4 py-2 rounded-xl transition-colors ${
+              !isSignUp ? 'bg-white text-[#2c2c2c]' : 'text-[#2c2c2c]/60 hover:text-[#2c2c2c]/80'
             }`}
           >
             sign in
@@ -102,8 +102,8 @@ export default function Auth() {
               setIsMagicLink(false)
               setMessage('')
             }}
-            className={`pb-2 border-b transition-colors ${
-              isSignUp ? 'border-[#f97316]' : 'border-transparent text-[#2c2c2c]/60'
+            className={`px-4 py-2 rounded-xl transition-colors ${
+              isSignUp ? 'bg-white text-[#2c2c2c]' : 'text-[#2c2c2c]/60 hover:text-[#2c2c2c]/80'
             }`}
           >
             sign up
@@ -118,7 +118,7 @@ export default function Auth() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="email"
               required={!isMagicLink}
-              className="w-full px-6 py-4 text-xl font-serif bg-transparent border-b border-[#f97316]/20 focus:outline-none focus:border-[#f97316]/50 transition-colors"
+              className="soft-input text-xl"
             />
           </div>
 
@@ -130,7 +130,7 @@ export default function Auth() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="password"
                 required
-                className="w-full px-6 py-4 text-xl font-serif bg-transparent border-b border-[#f97316]/20 focus:outline-none focus:border-[#f97316]/50 transition-colors"
+                className="soft-input text-xl"
               />
             </div>
           )}
@@ -143,7 +143,7 @@ export default function Auth() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full px-8 py-4 text-sm tracking-wider bg-[#f97316] text-white hover:bg-[#ea580c] disabled:opacity-30 disabled:cursor-not-allowed transition-colors font-serif uppercase"
+              className="w-full soft-button"
             >
               {isLoading ? '...' : isMagicLink ? 'send magic link' : isSignUp ? 'sign up' : 'sign in'}
             </button>
@@ -155,7 +155,7 @@ export default function Auth() {
                   setIsMagicLink(true)
                   setMessage('')
                 }}
-                className="w-full px-8 py-4 text-sm text-[#2c2c2c]/40 hover:text-[#2c2c2c]/60 transition-colors font-serif tracking-wide"
+                className="w-full subtle-button"
               >
                 use magic link instead
               </button>

@@ -31,3 +31,21 @@
     @apply leading-relaxed;
   }
 }
+
+@layer components {
+  .soft-panel {
+    @apply rounded-[28px] border border-[#f97316]/15 bg-white/55 backdrop-blur-sm;
+  }
+
+  .soft-input {
+    @apply w-full rounded-2xl border border-[#f97316]/20 bg-white/50 px-5 py-3 text-base md:text-lg font-serif focus:outline-none focus:border-[#f97316]/50 transition-colors;
+  }
+
+  .soft-button {
+    @apply rounded-2xl px-8 py-3 text-sm tracking-wider bg-[#f97316] text-white hover:bg-[#ea580c] disabled:opacity-40 disabled:cursor-not-allowed transition-colors font-serif uppercase;
+  }
+
+  .subtle-button {
+    @apply rounded-2xl px-6 py-3 text-sm text-[#2c2c2c]/55 hover:text-[#2c2c2c]/75 hover:bg-[#f97316]/5 transition-colors font-serif tracking-wide;
+  }
+}

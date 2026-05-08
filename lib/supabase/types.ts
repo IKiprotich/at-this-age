@@ -35,21 +35,27 @@ export interface Database {
           user_id: string
           age: number
           thought: string
+          archived_at: string | null
           created_at: string
+          updated_at: string
         }
         Insert: {
           id?: string
           user_id: string
           age: number
           thought: string
+          archived_at?: string | null
           created_at?: string
+          updated_at?: string
         }
         Update: {
           id?: string
           user_id?: string
           age?: number
           thought?: string
+          archived_at?: string | null
           created_at?: string
+          updated_at?: string
         }
       }
     }

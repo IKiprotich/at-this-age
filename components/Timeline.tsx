@@ -20,10 +20,6 @@ interface TimelineProps {
 }
 
 export default function Timeline({ thoughts, currentAge, onPreserve, onEdit, onArchive }: TimelineProps) {
-  if (thoughts.length === 0) {
-    return null
-  }
-
   const [searchTerm, setSearchTerm] = useState('')
   const [minAge, setMinAge] = useState('')
   const [maxAge, setMaxAge] = useState('')
@@ -107,6 +103,10 @@ export default function Timeline({ thoughts, currentAge, onPreserve, onEdit, onA
     } finally {
       setIsArchivingId(null)
     }
+  }
+
+  if (thoughts.length === 0) {
+    return null
   }
 
   return (

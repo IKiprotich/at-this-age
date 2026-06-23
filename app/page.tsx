@@ -179,7 +179,7 @@ export default function Home() {
     if (!user) return
 
     try {
-      // Soft archive keeps history in DB while removing it from active timeline.
+      // Set archived_at instead of deleting — the row stays in the DB but is hidden from the active timeline query.
       const { error } = await (supabase.from('thoughts') as any)
         .update({ archived_at: new Date().toISOString() })
         .eq('id', thoughtId)

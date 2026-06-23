@@ -156,7 +156,7 @@ export default function Home() {
     if (!user) return
 
     try {
-      // Keep update scoped to the signed-in user to avoid cross-user updates.
+      // Filter by user_id so only this account's rows can be updated.
       const { data, error } = await (supabase.from('thoughts') as any)
         .update({ thought: nextThoughtText })
         .eq('id', thoughtId)
